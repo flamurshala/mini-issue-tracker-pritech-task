@@ -8,6 +8,45 @@
         <a href="{{ route('issues.create') }}" style="background: #2563eb; border-radius: 6px; color: #ffffff; padding: 10px 14px;">Create Issue</a>
     </div>
 
+    <form action="{{ route('issues.index') }}" method="GET" style="align-items: end; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 6px; display: grid; gap: 16px; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 20px; padding: 16px;">
+        <div>
+            <label for="status">Status</label>
+            <select id="status" name="status" style="display: block; margin-top: 6px; width: 100%; padding: 10px;">
+                <option value="">All statuses</option>
+                <option value="open" @selected(request('status') === 'open')>Open</option>
+                <option value="in_progress" @selected(request('status') === 'in_progress')>In Progress</option>
+                <option value="closed" @selected(request('status') === 'closed')>Closed</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="priority">Priority</label>
+            <select id="priority" name="priority" style="display: block; margin-top: 6px; width: 100%; padding: 10px;">
+                <option value="">All priorities</option>
+                <option value="low" @selected(request('priority') === 'low')>Low</option>
+                <option value="medium" @selected(request('priority') === 'medium')>Medium</option>
+                <option value="high" @selected(request('priority') === 'high')>High</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="tag">Tag</label>
+            <select id="tag" name="tag" style="display: block; margin-top: 6px; width: 100%; padding: 10px;">
+                <option value="">All tags</option>
+                @foreach ($tags as $tag)
+                    <option value="{{ $tag->id }}" @selected((string) request('tag') === (string) $tag->id)>
+                        {{ $tag->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" style="background: #2563eb; border: 0; border-radius: 6px; color: #ffffff; cursor: pointer; padding: 10px 14px;">Filter</button>
+            <a href="{{ route('issues.index') }}" style="align-self: center;">Clear</a>
+        </div>
+    </form>
+
     @if ($issues->isEmpty())
         <p>No issues found.</p>
     @else

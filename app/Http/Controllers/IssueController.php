@@ -6,17 +6,36 @@ use App\Http\Requests\StoreIssueRequest;
 use App\Http\Requests\UpdateIssueRequest;
 use App\Models\Issue;
 use App\Models\Project;
+use App\Models\Tag;
+use Illuminate\Http\Request;
 
 class IssueController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $issues = Issue::with(['project', 'tags'])->latest()->paginate(10);
+        $query = Issue::with(['project', 'tags']);
 
-        return view('issues.index', compact('issues'));
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('priority')) {
+            $query->where('priority', $request->priority);
+        }
+
+        if ($request->filled('tag')) {
+            $query->whereHas('tags', function ($tagQuery) use ($request) {
+                $tagQuery->where('tags.id', $request->tag);
+            });
+        }
+
+        $issues = $query->latest()->paginate(10)->withQueryString();
+        $tags = Tag::orderBy('name')->get();
+
+        return view('issues.index', compact('issues', 'tags'));
     }
 
     /**

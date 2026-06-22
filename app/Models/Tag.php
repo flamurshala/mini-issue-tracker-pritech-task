@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Tag extends Model
 {
+    protected $fillable = [
+        'name',
+        'color',
+    ];
+
     public function issues(): BelongsToMany
     {
         return $this->belongsToMany(Issue::class, 'issue_tag');
