@@ -9,6 +9,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Issue extends Model
 {
+    protected $fillable = [
+        'project_id',
+        'title',
+        'description',
+        'status',
+        'priority',
+        'due_date',
+    ];
+
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
