@@ -8,12 +8,16 @@
         <div style="display: flex; align-items: center; gap: 12px;">
             <a href="{{ route('projects.index') }}">Back to Projects</a>
             <a href="{{ route('issues.create') }}">Create Issue</a>
-            <a href="{{ route('projects.edit', $project) }}">Edit Project</a>
-            <form action="{{ route('projects.destroy', $project) }}" method="POST" style="margin: 0;">
-                @csrf
-                @method('DELETE')
-                <button type="submit" style="background: none; border: 0; color: #dc2626; cursor: pointer; padding: 0;">Delete Project</button>
-            </form>
+            @can('update', $project)
+                <a href="{{ route('projects.edit', $project) }}">Edit Project</a>
+            @endcan
+            @can('delete', $project)
+                <form action="{{ route('projects.destroy', $project) }}" method="POST" style="margin: 0;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" style="background: none; border: 0; color: #dc2626; cursor: pointer; padding: 0;">Delete Project</button>
+                </form>
+            @endcan
         </div>
     </div>
 
@@ -22,6 +26,7 @@
         <p>{{ $project->description ?? 'No description provided.' }}</p>
         <p><strong>Start Date:</strong> {{ $project->start_date ?? 'Not set' }}</p>
         <p><strong>Deadline:</strong> {{ $project->deadline ?? 'Not set' }}</p>
+        <p><strong>Owner:</strong> {{ $project->user?->name ?? 'No owner' }}</p>
         <p><strong>Created:</strong> {{ $project->created_at?->format('Y-m-d') }}</p>
     </section>
 

@@ -13,7 +13,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::withCount('issues')
+        $projects = Project::with('user')
+            ->withCount('issues')
             ->latest()
             ->paginate(10);
 
@@ -25,6 +26,8 @@ class ProjectController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Project::class);
+
         return view('projects.create');
     }
 
@@ -33,7 +36,12 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        $project = Project::create($request->validated());
+        $this->authorize('create', Project::class);
+
+        $data = $request->validated();
+        $data['user_id'] = auth()->id();
+
+        $project = Project::create($data);
 
         return redirect()
             ->route('projects.show', $project)
@@ -45,7 +53,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        $project->load(['issues.tags']);
+        $project->load(['user', 'issues.tags']);
 
         return view('projects.show', compact('project'));
     }
@@ -55,6 +63,8 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
+        $this->authorize('update', $project);
+
         return view('projects.edit', compact('project'));
     }
 
@@ -63,6 +73,8 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
+        $this->authorize('update', $project);
+
         $project->update($request->validated());
 
         return redirect()
@@ -75,6 +87,8 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        $this->authorize('delete', $project);
+
         $project->delete();
 
         return redirect()

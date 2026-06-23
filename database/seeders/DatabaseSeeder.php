@@ -19,16 +19,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $users = User::factory()
+            ->count(5)
+            ->create();
+
         $projects = Project::factory()
             ->count(5)
+            ->state(fn () => [
+                'user_id' => $users->random()->id,
+            ])
             ->create();
 
         $tags = Tag::factory()
             ->count(8)
-            ->create();
-
-        $users = User::factory()
-            ->count(5)
             ->create();
 
         $projects->each(function (Project $project): void {

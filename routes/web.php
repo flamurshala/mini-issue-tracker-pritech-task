@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\IssueTagController;
@@ -12,7 +13,22 @@ Route::get('/', function () {
     return redirect()->route('projects.index');
 });
 
-Route::resource('projects', ProjectController::class);
+Route::middleware('guest')->group(function (): void {
+    Route::get('login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('login', [AuthController::class, 'login'])->name('login.store');
+    Route::get('register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('register', [AuthController::class, 'register'])->name('register.store');
+});
+
+Route::post('logout', [AuthController::class, 'logout'])
+    ->middleware('auth')
+    ->name('logout');
+
+Route::resource('projects', ProjectController::class)->only(['index']);
+Route::resource('projects', ProjectController::class)
+    ->except(['index', 'show'])
+    ->middleware('auth');
+Route::resource('projects', ProjectController::class)->only(['show']);
 Route::resource('issues', IssueController::class);
 
 Route::get('tags', [TagController::class, 'index'])->name('tags.index');
