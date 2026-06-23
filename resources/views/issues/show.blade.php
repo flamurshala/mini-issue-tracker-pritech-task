@@ -57,6 +57,42 @@
         </form>
     </section>
 
+    <section style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 20px; padding: 20px;">
+        <h2 style="margin-top: 0;">Assigned Members</h2>
+        <div id="user-assignment-message" style="margin-bottom: 16px;"></div>
+        <div id="user-assignment-errors" style="margin-bottom: 16px;"></div>
+
+        <div id="assigned-users" style="display: grid; gap: 10px; margin-bottom: 18px;">
+            @foreach ($issue->users as $user)
+                <div class="assigned-user-item" data-user-id="{{ $user->id }}" style="align-items: center; border: 1px solid #e5e7eb; border-radius: 6px; display: flex; gap: 10px; justify-content: space-between; padding: 10px;">
+                    <span>{{ $user->name }} ({{ $user->email }})</span>
+                    <button
+                        type="button"
+                        class="detach-user-button"
+                        data-user-id="{{ $user->id }}"
+                        data-url="{{ route('issues.users.detach', [$issue, $user]) }}"
+                        style="background: none; border: 0; color: #dc2626; cursor: pointer; padding: 0;"
+                    >
+                        Remove
+                    </button>
+                </div>
+            @endforeach
+        </div>
+
+        <p id="no-assigned-users" @if ($issue->users->isNotEmpty()) style="display: none;" @endif>No users assigned yet.</p>
+
+        <form id="assign-user-form" data-url="{{ route('issues.users.attach', $issue) }}" style="display: flex; gap: 10px; max-width: 620px;">
+            @csrf
+            <select id="user_id" name="user_id" style="flex: 1; padding: 10px;" @disabled($availableUsers->isEmpty())>
+                <option value="">Select user</option>
+                @foreach ($availableUsers as $user)
+                    <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
+                @endforeach
+            </select>
+            <button id="assign-user-button" type="submit" style="background: #2563eb; border: 0; border-radius: 6px; color: #ffffff; cursor: pointer; padding: 10px 14px;" @disabled($availableUsers->isEmpty())>Assign</button>
+        </form>
+    </section>
+
     <section style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 6px; padding: 20px;">
         <h2 style="margin-top: 0;">Comments</h2>
         <div id="comments-message" style="margin-bottom: 16px;"></div>
@@ -92,6 +128,14 @@
         const noTagsMessage = document.getElementById('no-tags-message');
         const csrfToken = attachTagForm.querySelector('input[name="_token"]').value;
         const detachBaseUrl = @json(url('issues/' . $issue->id . '/tags'));
+        const assignUserForm = document.getElementById('assign-user-form');
+        const userSelect = document.getElementById('user_id');
+        const assignUserButton = document.getElementById('assign-user-button');
+        const assignedUsers = document.getElementById('assigned-users');
+        const noAssignedUsers = document.getElementById('no-assigned-users');
+        const userAssignmentMessage = document.getElementById('user-assignment-message');
+        const userAssignmentErrors = document.getElementById('user-assignment-errors');
+        const detachUserBaseUrl = @json(url('issues/' . $issue->id . '/users'));
         const commentsIndexUrl = @json(route('issues.comments.index', $issue));
         const commentForm = document.getElementById('comment-form');
         const commentsMessage = document.getElementById('comments-message');
@@ -159,6 +203,72 @@
             }
 
             tagSelect.appendChild(option);
+        }
+
+        function clearUserAssignmentMessages() {
+            userAssignmentMessage.textContent = '';
+            userAssignmentMessage.className = '';
+            userAssignmentErrors.textContent = '';
+            userAssignmentErrors.className = '';
+        }
+
+        function showUserAssignmentMessage(message, type = 'success') {
+            userAssignmentMessage.textContent = message;
+            userAssignmentMessage.className = type === 'success' ? 'alert alert-success' : 'alert alert-error';
+        }
+
+        function showUserAssignmentErrors(errors) {
+            userAssignmentErrors.className = 'alert alert-error';
+
+            const messages = errors ? Object.values(errors).flat() : ['Unable to assign user.'];
+            const list = document.createElement('ul');
+
+            messages.forEach((message) => {
+                const item = document.createElement('li');
+                item.textContent = message;
+                list.appendChild(item);
+            });
+
+            userAssignmentErrors.innerHTML = '';
+            userAssignmentErrors.appendChild(list);
+        }
+
+        function refreshUserAssignmentEmptyStates() {
+            const hasAssignedUsers = assignedUsers.querySelectorAll('.assigned-user-item').length > 0;
+            const hasAvailableUsers = userSelect.querySelectorAll('option[value]:not([value=""])').length > 0;
+
+            noAssignedUsers.style.display = hasAssignedUsers ? 'none' : 'block';
+            userSelect.disabled = !hasAvailableUsers;
+            assignUserButton.disabled = !hasAvailableUsers;
+        }
+
+        function addAssignedUser(user) {
+            const item = document.createElement('div');
+            item.className = 'assigned-user-item';
+            item.dataset.userId = user.id;
+            item.style.cssText = 'align-items: center; border: 1px solid #e5e7eb; border-radius: 6px; display: flex; gap: 10px; justify-content: space-between; padding: 10px;';
+
+            const label = document.createElement('span');
+            label.textContent = `${user.name} (${user.email})`;
+
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'detach-user-button';
+            button.dataset.userId = user.id;
+            button.dataset.url = `${detachUserBaseUrl}/${user.id}`;
+            button.textContent = 'Remove';
+            button.style.cssText = 'background: none; border: 0; color: #dc2626; cursor: pointer; padding: 0;';
+
+            item.appendChild(label);
+            item.appendChild(button);
+            assignedUsers.appendChild(item);
+        }
+
+        function addAvailableUserOption(user) {
+            const option = document.createElement('option');
+            option.value = user.id;
+            option.textContent = `${user.name} (${user.email})`;
+            userSelect.appendChild(option);
         }
 
         function showCommentsMessage(message, type = 'success') {
@@ -358,7 +468,87 @@
         });
 
         refreshEmptyStates();
+        refreshUserAssignmentEmptyStates();
         loadComments();
+
+        assignUserForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            clearUserAssignmentMessages();
+
+            const selectedOption = userSelect.selectedOptions[0];
+
+            if (!userSelect.value) {
+                showUserAssignmentErrors({
+                    user_id: ['Please select a user to assign.'],
+                });
+                return;
+            }
+
+            const response = await fetch(assignUserForm.dataset.url, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+                body: JSON.stringify({
+                    user_id: userSelect.value,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                showUserAssignmentErrors(data.errors);
+                return;
+            }
+
+            addAssignedUser(data.user);
+            selectedOption.remove();
+            userSelect.value = '';
+            refreshUserAssignmentEmptyStates();
+            showUserAssignmentMessage(data.message);
+        });
+
+        assignedUsers.addEventListener('click', async (event) => {
+            const button = event.target.closest('.detach-user-button');
+
+            if (!button) {
+                return;
+            }
+
+            clearUserAssignmentMessages();
+
+            const item = button.closest('.assigned-user-item');
+            const label = item.querySelector('span').textContent;
+            const user = {
+                id: button.dataset.userId,
+                name: label.replace(/\s+\([^)]+\)$/, ''),
+                email: (label.match(/\(([^)]+)\)$/) || [])[1] || '',
+            };
+
+            const response = await fetch(button.dataset.url, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                showUserAssignmentMessage(data.message || 'Could not remove user.', 'error');
+                return;
+            }
+
+            item.remove();
+            addAvailableUserOption(user);
+            refreshUserAssignmentEmptyStates();
+            showUserAssignmentMessage(data.message);
+        });
 
         commentsPagination.addEventListener('click', (event) => {
             const button = event.target.closest('button[data-url]');

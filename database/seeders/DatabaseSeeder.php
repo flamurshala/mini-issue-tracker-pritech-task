@@ -6,6 +6,7 @@ use App\Models\Comment;
 use App\Models\Issue;
 use App\Models\Project;
 use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -26,6 +27,10 @@ class DatabaseSeeder extends Seeder
             ->count(8)
             ->create();
 
+        $users = User::factory()
+            ->count(5)
+            ->create();
+
         $projects->each(function (Project $project): void {
             Issue::factory()
                 ->count(4)
@@ -34,7 +39,7 @@ class DatabaseSeeder extends Seeder
                 ]);
         });
 
-        Issue::all()->each(function (Issue $issue) use ($tags): void {
+        Issue::all()->each(function (Issue $issue) use ($tags, $users): void {
             Comment::factory()
                 ->count(3)
                 ->create([
@@ -46,6 +51,12 @@ class DatabaseSeeder extends Seeder
                 ->toArray();
 
             $issue->tags()->syncWithoutDetaching($tagIds);
+
+            $userIds = $users->random(rand(1, min(3, $users->count())))
+                ->pluck('id')
+                ->toArray();
+
+            $issue->users()->syncWithoutDetaching($userIds);
         });
     }
 }

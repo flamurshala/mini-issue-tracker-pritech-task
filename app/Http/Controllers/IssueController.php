@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateIssueRequest;
 use App\Models\Issue;
 use App\Models\Project;
 use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class IssueController extends Controller
@@ -65,12 +66,15 @@ class IssueController extends Controller
      */
     public function show(Issue $issue)
     {
-        $issue->load(['project', 'tags']);
+        $issue->load(['project', 'tags', 'users']);
         $availableTags = Tag::whereNotIn('id', $issue->tags->pluck('id'))
             ->orderBy('name')
             ->get();
+        $availableUsers = User::whereNotIn('id', $issue->users->pluck('id'))
+            ->orderBy('name')
+            ->get();
 
-        return view('issues.show', compact('issue', 'availableTags'));
+        return view('issues.show', compact('issue', 'availableTags', 'availableUsers'));
     }
 
     /**
