@@ -33,8 +33,21 @@ class IssueController extends Controller
             });
         }
 
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($searchQuery) use ($search) {
+                $searchQuery->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%');
+            });
+        }
+
         $issues = $query->latest()->paginate(10)->withQueryString();
         $tags = Tag::orderBy('name')->get();
+
+        if ($request->ajax()) {
+            return view('issues.partials.table', compact('issues'))->render();
+        }
 
         return view('issues.index', compact('issues', 'tags'));
     }

@@ -81,6 +81,235 @@
             border-color: #2563eb;
             color: #ffffff;
         }
+
+        .toolbar-card {
+            align-items: end;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            display: grid;
+            gap: 18px;
+            grid-template-columns: minmax(240px, 2fr) repeat(3, minmax(150px, 1fr)) auto;
+            margin-bottom: 20px;
+            padding: 18px;
+        }
+
+        .form-control {
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            box-sizing: border-box;
+            display: block;
+            height: 42px;
+            margin-top: 6px;
+            padding: 9px 11px;
+            width: 100%;
+        }
+
+        .button-primary {
+            background: #2563eb;
+            border: 0;
+            border-radius: 6px;
+            color: #ffffff;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 42px;
+            padding: 10px 14px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .button-danger {
+            background: none;
+            border: 0;
+            color: #dc2626;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .table-wrap {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .data-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .data-table th {
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+            color: #4b5563;
+            font-size: 13px;
+            padding: 12px 14px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 14px;
+            vertical-align: top;
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .column-title {
+            min-width: 220px;
+        }
+
+        .column-project {
+            min-width: 180px;
+        }
+
+        .column-tags {
+            min-width: 180px;
+        }
+
+        .column-nowrap {
+            white-space: nowrap;
+        }
+
+        .badge-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag-badge,
+        .status-badge,
+        .priority-badge {
+            align-items: center;
+            border-radius: 999px;
+            display: inline-flex;
+            font-size: 12px;
+            line-height: 1;
+            padding: 6px 9px;
+            white-space: nowrap;
+        }
+
+        .tag-badge {
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            color: #374151;
+        }
+
+        .tag-dot {
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 999px;
+            display: inline-block;
+            height: 10px;
+            margin-right: 6px;
+            width: 10px;
+        }
+
+        .status-badge {
+            background: #eef2ff;
+            color: #3730a3;
+        }
+
+        .priority-badge {
+            background: #ecfdf5;
+            color: #166534;
+        }
+
+        .actions-inline {
+            align-items: center;
+            display: flex;
+            gap: 14px;
+            white-space: nowrap;
+        }
+
+        .issues-table {
+            table-layout: fixed;
+        }
+
+        .issues-table .col-title {
+            width: 22%;
+        }
+
+        .issues-table .col-project {
+            width: 17%;
+        }
+
+        .issues-table .col-status {
+            width: 10%;
+        }
+
+        .issues-table .col-priority {
+            width: 10%;
+        }
+
+        .issues-table .col-due-date {
+            width: 12%;
+        }
+
+        .issues-table .col-tags {
+            width: 18%;
+        }
+
+        .issues-table .col-actions {
+            width: 11%;
+        }
+
+        .issues-table td {
+            overflow-wrap: anywhere;
+            word-break: normal;
+        }
+
+        .issues-table .cell-compact {
+            overflow-wrap: normal;
+            white-space: normal;
+        }
+
+        .issues-table .status-badge,
+        .issues-table .priority-badge,
+        .issues-table .tag-badge {
+            font-size: 11px;
+            padding: 5px 7px;
+        }
+
+        .issue-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .issue-actions {
+            align-items: center;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .issue-actions a,
+        .issue-actions button {
+            font-size: 13px;
+        }
+
+        @media (max-width: 900px) {
+            .toolbar-card {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 10px 8px;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .toolbar-card {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
