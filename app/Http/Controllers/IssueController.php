@@ -65,9 +65,12 @@ class IssueController extends Controller
      */
     public function show(Issue $issue)
     {
-        $issue->load(['project', 'tags', 'comments']);
+        $issue->load(['project', 'tags']);
+        $availableTags = Tag::whereNotIn('id', $issue->tags->pluck('id'))
+            ->orderBy('name')
+            ->get();
 
-        return view('issues.show', compact('issue'));
+        return view('issues.show', compact('issue', 'availableTags'));
     }
 
     /**
