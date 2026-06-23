@@ -18,10 +18,12 @@
             <input id="password" type="password" name="password" required style="display: block; margin-top: 6px; width: 100%; padding: 10px;">
         </div>
 
-        <label style="display: flex; align-items: center; gap: 8px;">
-            <input type="checkbox" name="remember" value="1">
-            Remember me
-        </label>
+        <div class="remember-row">
+            <label class="remember-label" for="remember">
+                <input id="remember" type="checkbox" name="remember" value="1">
+                <span>Remember me</span>
+            </label>
+        </div>
 
         <div style="display: flex; align-items: center; gap: 12px;">
             <button type="submit" style="background: #2563eb; border: 0; border-radius: 6px; color: #ffffff; cursor: pointer; padding: 10px 14px;">Login</button>

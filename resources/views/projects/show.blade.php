@@ -36,7 +36,7 @@
         @if ($project->issues->isEmpty())
             <p>No issues found for this project.</p>
         @else
-            <table style="width: 100%; border-collapse: collapse;">
+            <table class="responsive-table" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr>
                         <th style="border-bottom: 1px solid #e5e7eb; padding: 12px; text-align: left;">Title</th>
@@ -50,18 +50,18 @@
                 <tbody>
                     @foreach ($project->issues as $issue)
                         <tr>
-                            <td style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $issue->title }}</td>
-                            <td style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ str_replace('_', ' ', $issue->status) }}</td>
-                            <td style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $issue->priority }}</td>
-                            <td style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $issue->due_date ?? 'No due date' }}</td>
-                            <td style="border-bottom: 1px solid #e5e7eb; padding: 12px;">
+                            <td data-label="Title" style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $issue->title }}</td>
+                            <td data-label="Status" style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ str_replace('_', ' ', $issue->status) }}</td>
+                            <td data-label="Priority" style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $issue->priority }}</td>
+                            <td data-label="Due Date" style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $issue->due_date ?? 'No due date' }}</td>
+                            <td data-label="Tags" style="border-bottom: 1px solid #e5e7eb; padding: 12px;">
                                 @if ($issue->tags->isEmpty())
                                     No tags
                                 @else
                                     {{ $issue->tags->pluck('name')->join(', ') }}
                                 @endif
                             </td>
-                            <td style="border-bottom: 1px solid #e5e7eb; padding: 12px;">
+                            <td data-label="Actions" style="border-bottom: 1px solid #e5e7eb; padding: 12px;">
                                 <a href="{{ route('issues.show', $issue) }}">View Issue</a>
                             </td>
                         </tr>

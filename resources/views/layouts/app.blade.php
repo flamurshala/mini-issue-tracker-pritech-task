@@ -294,6 +294,25 @@
             font-size: 13px;
         }
 
+        .remember-row {
+            margin-bottom: 16px;
+            margin-top: 16px;
+        }
+
+        .remember-label {
+            align-items: center;
+            cursor: pointer;
+            display: inline-flex;
+            gap: 8px;
+        }
+
+        .remember-label input[type="checkbox"] {
+            flex: 0 0 auto;
+            height: auto;
+            margin: 0;
+            width: auto;
+        }
+
         @media (max-width: 900px) {
             .toolbar-card {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -305,9 +324,216 @@
             }
         }
 
-        @media (max-width: 620px) {
+        @media (max-width: 1024px) {
+            .container {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            nav > .container {
+                flex-wrap: wrap;
+                row-gap: 12px;
+            }
+
+            nav > .container > div {
+                margin-left: 0 !important;
+            }
+
+            .toolbar-card {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            input:not([type="checkbox"]):not([type="radio"]),
+            select,
+            textarea {
+                box-sizing: border-box;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            * {
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+
+            img,
+            svg {
+                max-width: 100%;
+            }
+
+            .container {
+                padding: 16px;
+            }
+
+            nav > .container {
+                align-items: flex-start !important;
+                flex-direction: column;
+                gap: 10px !important;
+                padding-bottom: 14px !important;
+                padding-top: 14px !important;
+            }
+
+            nav > .container > div {
+                align-items: flex-start !important;
+                flex-wrap: wrap;
+                gap: 10px !important;
+                width: 100%;
+            }
+
+            main.container > div[style*="justify-content: space-between"] {
+                align-items: flex-start !important;
+                flex-direction: column;
+            }
+
+            main.container > div[style*="justify-content: space-between"] > div {
+                align-items: flex-start !important;
+                flex-wrap: wrap;
+            }
+
             .toolbar-card {
                 grid-template-columns: 1fr;
+                gap: 14px;
+                padding: 14px;
+            }
+
+            .toolbar-card > div:last-child {
+                align-items: stretch !important;
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .button-primary,
+            button[type="submit"] {
+                min-height: 44px;
+            }
+
+            form[style*="max-width"] {
+                max-width: none !important;
+                width: 100%;
+            }
+
+            form > div[style*="display: flex"] {
+                align-items: flex-start !important;
+                flex-wrap: wrap;
+            }
+
+            input:not([type="checkbox"]):not([type="radio"]),
+            select,
+            textarea {
+                font-size: 16px;
+                width: 100% !important;
+            }
+
+            section {
+                padding: 16px !important;
+            }
+
+            #attach-tag-form,
+            #assign-user-form {
+                flex-direction: column;
+                max-width: none !important;
+            }
+
+            #attach-tag-form button,
+            #assign-user-form button,
+            #comment-form button {
+                width: 100%;
+            }
+
+            #attached-tags li,
+            .assigned-user-item {
+                align-items: flex-start !important;
+                flex-direction: column;
+            }
+
+            #comments-pagination button {
+                min-height: 40px;
+            }
+
+            .table-wrap {
+                border: 0;
+                overflow: visible;
+            }
+
+            .responsive-table {
+                display: block;
+            }
+
+            .responsive-table thead {
+                display: none;
+            }
+
+            .responsive-table tbody,
+            .responsive-table tr,
+            .responsive-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .responsive-table tr {
+                background: #ffffff;
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                margin-bottom: 12px;
+                padding: 12px;
+            }
+
+            .responsive-table td {
+                border-bottom: 0 !important;
+                padding: 7px 0 !important;
+                overflow-wrap: anywhere;
+            }
+
+            .responsive-table td::before {
+                color: #6b7280;
+                content: attr(data-label);
+                display: block;
+                font-size: 12px;
+                font-weight: 700;
+                margin-bottom: 3px;
+                text-transform: uppercase;
+            }
+
+            .issues-table {
+                table-layout: auto;
+            }
+
+            .issues-table .col-title,
+            .issues-table .col-project,
+            .issues-table .col-status,
+            .issues-table .col-priority,
+            .issues-table .col-due-date,
+            .issues-table .col-tags,
+            .issues-table .col-actions {
+                width: auto;
+            }
+
+            .issue-actions,
+            .actions-inline {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .issue-tags,
+            .badge-list {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .container {
+                padding: 14px;
+            }
+
+            h1 {
+                font-size: 26px;
+                line-height: 1.2;
             }
         }
     </style>

@@ -33,7 +33,7 @@
         @if ($tags->isEmpty())
             <p>No tags found.</p>
         @else
-            <table style="width: 100%; border-collapse: collapse; background: #ffffff;">
+            <table class="responsive-table" style="width: 100%; border-collapse: collapse; background: #ffffff;">
                 <thead>
                     <tr>
                         <th style="border-bottom: 1px solid #e5e7eb; padding: 12px; text-align: left;">Name</th>
@@ -44,8 +44,8 @@
                 <tbody>
                     @foreach ($tags as $tag)
                         <tr>
-                            <td style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $tag->name }}</td>
-                            <td style="border-bottom: 1px solid #e5e7eb; padding: 12px;">
+                            <td data-label="Name" style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $tag->name }}</td>
+                            <td data-label="Color" style="border-bottom: 1px solid #e5e7eb; padding: 12px;">
                                 @if ($tag->color)
                                     <span style="align-items: center; display: inline-flex; gap: 8px;">
                                         <span style="background: {{ $tag->color }}; border: 1px solid #d1d5db; border-radius: 999px; display: inline-block; height: 16px; width: 16px;"></span>
@@ -55,7 +55,7 @@
                                     No color
                                 @endif
                             </td>
-                            <td style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $tag->created_at?->format('Y-m-d') }}</td>
+                            <td data-label="Created" style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $tag->created_at?->format('Y-m-d') }}</td>
                         </tr>
                     @endforeach
                 </tbody>

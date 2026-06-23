@@ -15,7 +15,7 @@
     @if ($projects->isEmpty())
         <p>No projects found.</p>
     @else
-        <table style="width: 100%; border-collapse: collapse; background: #ffffff;">
+        <table class="responsive-table" style="width: 100%; border-collapse: collapse; background: #ffffff;">
             <thead>
                 <tr>
                     <th style="border-bottom: 1px solid #e5e7eb; padding: 12px; text-align: left;">Name</th>
@@ -30,13 +30,13 @@
             <tbody>
                 @foreach ($projects as $project)
                     <tr>
-                        <td style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $project->name }}</td>
-                        <td style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $project->description ? \Illuminate\Support\Str::limit($project->description, 80) : 'No description' }}</td>
-                        <td style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $project->start_date ?? 'Not set' }}</td>
-                        <td style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $project->deadline ?? 'Not set' }}</td>
-                        <td style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $project->user?->name ?? 'No owner' }}</td>
-                        <td style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $project->issues_count }}</td>
-                        <td style="border-bottom: 1px solid #e5e7eb; padding: 12px;">
+                        <td data-label="Name" style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $project->name }}</td>
+                        <td data-label="Description" style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $project->description ? \Illuminate\Support\Str::limit($project->description, 80) : 'No description' }}</td>
+                        <td data-label="Start Date" style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $project->start_date ?? 'Not set' }}</td>
+                        <td data-label="Deadline" style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $project->deadline ?? 'Not set' }}</td>
+                        <td data-label="Owner" style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $project->user?->name ?? 'No owner' }}</td>
+                        <td data-label="Issues" style="border-bottom: 1px solid #e5e7eb; padding: 12px;">{{ $project->issues_count }}</td>
+                        <td data-label="Actions" style="border-bottom: 1px solid #e5e7eb; padding: 12px;">
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <a href="{{ route('projects.show', $project) }}">View</a>
                                 @can('update', $project)
